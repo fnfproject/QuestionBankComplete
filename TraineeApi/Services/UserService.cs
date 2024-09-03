@@ -8,6 +8,7 @@ using QuestionBankApi.Trainee.Dtos;
 
 namespace TraineeApi.Services
 {
+         
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
