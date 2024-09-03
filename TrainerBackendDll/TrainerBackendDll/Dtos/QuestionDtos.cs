@@ -25,7 +25,7 @@ namespace QuestionBankDll.Trainer.Dtos
         public IFormFile OptionDFile { get; set; }
         public string CorrectAnswer { get; set; }
         public IFormFile CorrectAnswerFile { get; set; }
-        public string Explanation { get; set; }
+        public string Explaination { get; set; }
         public IFormFile ExplanationFile { get; set; }
     }
 }

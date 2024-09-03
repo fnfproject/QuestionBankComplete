@@ -9,6 +9,8 @@ using QuestionBankAPI.Trainer.Services;
 using QuestionBankDll.Trainer.Dtos;
 using QuestionBankDll.Trainer.Models;
 using QuestionBankDll.Trainer.Services;
+using TrainerBackendDll.Dtos;
+using TrainerBackendDll.Services;
 
 namespace QuestionBankAPI.Trainer.Controllers
 {
@@ -20,6 +22,8 @@ namespace QuestionBankAPI.Trainer.Controllers
         private readonly IQuestionService _questionDataService;
         private readonly IResultDataService _resultDataService;
         private readonly IPracticePaperDataService _practicePaperDataService;
+        private readonly ITestService _testDataService;
+
         private readonly string _uploadPath;
         private readonly string _imageFolder;
         private readonly string _imageUIFolder;
@@ -63,7 +67,7 @@ namespace QuestionBankAPI.Trainer.Controllers
         {
             try
             {
-                 _questionDataService.AddQuestion(question);
+                 await _questionDataService.AddQuestion(question);
                 return Ok();
             }
             catch (Exception ex)
@@ -93,7 +97,7 @@ namespace QuestionBankAPI.Trainer.Controllers
 
                     for (int row = 2; row <= rowCount; row++)
                     {
-                        var question = new Question
+                        var question = new QuestionDtos
                         {
                             Subject = _questionDataService.ProcessOption(worksheet.Cells[row, 1], _imageFolder),
                             Topic = _questionDataService.ProcessOption(worksheet.Cells[row, 2], _imageFolder),
@@ -105,12 +109,12 @@ namespace QuestionBankAPI.Trainer.Controllers
                             OptionD = _questionDataService.ProcessOption(worksheet.Cells[row, 8], _imageFolder),
                             CorrectAnswer = _questionDataService.ProcessOption(worksheet.Cells[row, 9], _imageFolder),
                             Explaination = _questionDataService.ProcessOption(worksheet.Cells[row, 10], _imageFolder),
-                            CreatedBy = 1,
-                            CreatedAt = DateTime.Now
+                           // CreatedBy = 1,
+                            //CreatedAt = DateTime.Now
                             //UpdatedAt = DateTime.Now,
 
                         };
-                         _questionDataService.AddQuestion(question);
+                         await _questionDataService.AddQuestion(question);
 
 
                     }
@@ -339,6 +343,81 @@ namespace QuestionBankAPI.Trainer.Controllers
 
             }
         
+        }
+
+        [HttpPost("test/GenerateTest")]
+        public async Task<IActionResult> GenerateTest(GenerateTestRequest request)
+        {
+            Console.WriteLine("This is in Controller");
+
+            try
+            {
+                await _testDataService.GenerateTestAsync(request);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("This is in Controller");
+
+                return BadRequest(ex.Message);
+                //Console.WriteLine(ex.StackTrace);
+            }
+
+        }
+
+
+        [HttpGet("test/{hyperlink}")]
+        public async Task<IActionResult> GetTest(string hyperlink)
+        {
+            try
+            {
+                var test = await _testDataService.GetTestByHyperlinkAsync(hyperlink);
+                return Ok(test);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while retrieving the test.");
+            }
+        }
+
+        [HttpPost("submit-test")]
+        public async Task<IActionResult> SubmitTest([FromBody] SubmitTestRequest request)
+        {
+            try
+            {
+                await _testDataService.SubmitAnswersAsync(request.TestId, request.UserId, request.UserAnswers);
+                return Ok("Test results saved successfully.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while submitting the test.");
+            }
+        }
+
+        [HttpPost("save-test")]
+        public async Task<IActionResult> SaveTest([FromBody] SubmitTestRequest request)
+        {
+            try
+            {
+                await _testDataService.SaveTestResultsAsync(request.TestId, request.UserId, request.UserAnswerDtos);
+                return Ok("Test results saved successfully.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while submitting the test.");
+            }
         }
 
 

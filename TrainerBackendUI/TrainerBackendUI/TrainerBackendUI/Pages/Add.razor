@@ -32,74 +32,48 @@
                 <form>
                     <label>Subject:</label>
                     <input type="text" @bind="singleQuestion.Subject" class="form-control" />
-                    @if (!string.IsNullOrEmpty(subjectError))
-                    {
-                        <span class="text-danger">@subjectError</span>
-                    }
+
                     <br />
                     <label>Topic:</label>
                     <input type="text" @bind="singleQuestion.Topic" class="form-control" />
-                    @if (!string.IsNullOrEmpty(TopicError))
-                    {
-                        <span class="text-danger">@TopicError</span>
-                    }
+
                     <br />
-                    <label >Difficulty Level:</label>
+                    <label>Difficulty Level:</label>
                     @* <input type="text" @bind="singleQuestion.DifficultyLevel" class="form-control" /> *@
-                    <select class="form-control" @bind="singleQuestion.DifficultyLevel" >
+                    <select class="form-control" @bind="singleQuestion.DifficultyLevel">
+                        <option value="Select Option">Select Option</option>
                         <option value="Easy">Easy</option>
-                        <option value="Mediun">Medium</option>
+                        <option value="Medium">Medium</option>
                         <option value="Hard">Hard</option>
                     </select>
                     <br />
                     <label>Question Text:</label>
                     <input type="text" @bind="singleQuestion.QuestionText" class="form-control" />
-                    @if (!string.IsNullOrEmpty(QuestionTextError))
-                    {
-                        <span class="text-danger">@QuestionTextError</span>
-                    }
+
                     <br />
                     <label>Option A:</label>
                     <input type="text" @bind="singleQuestion.OptionA" class="form-control" />
-                    @if (!string.IsNullOrEmpty(OptionAError))
-                    {
-                        <span class="text-danger">@OptionAError</span>
-                    }
+
                     <br />
                     <label>Option B:</label>
                     <input type="text" @bind="singleQuestion.OptionB" class="form-control" />
-                    @if (!string.IsNullOrEmpty(OptionBError))
-                    {
-                        <span class="text-danger">@OptionBError</span>
-                    }
+
                     <br />
                     <label>Option C:</label>
                     <input type="text" @bind="singleQuestion.OptionC" class="form-control" />
-                    @if (!string.IsNullOrEmpty(OptionCError))
-                    {
-                        <span class="text-danger">@OptionCError</span>
-                    }
+
                     <br />
                     <label>Option D:</label>
                     <input type="text" @bind="singleQuestion.OptionD" class="form-control" />
-                    @if (!string.IsNullOrEmpty(OptionDError))
-                    {
-                        <span class="text-danger">@OptionDError</span>
-                    }
+
                     <br />
                     <label>Correct Answer:</label>
                     <input type="text" @bind="singleQuestion.CorrectAnswer" class="form-control" />
-                    @if (!string.IsNullOrEmpty(CorrectAnswerError))
-                    {
-                        <span class="text-danger">@CorrectAnswerError</span>
-                    }
+
                     <br />
                     <label>Explanation:</label>
                     <input type="text" @bind="singleQuestion.Explaination" class="form-control" />
-                    @if (!string.IsNullOrEmpty(exp))
-                    {
-                        <span class="text-danger">@exp</span>
-                    }
+
                     <br />
 
                     <button type="submit" class="btn btn-outline-success m-3 p-2" @onclick="SubmitSingleQuestion">Submit</button>
@@ -115,7 +89,7 @@
                     <label for="fileupload">Upload Document:</label>
                     <InputFile OnChange="HandleFileUploaded" id="fileupload" class="form-control" />
                     <br />
-                    <button type="submit" class="btn btn-outline-success m-3 p-2 " >Submit</button>
+                    <button type="submit" class="btn btn-outline-success m-3 p-2 ">Submit</button>
                     <button type="submit" class="btn btn-outline-danger p-2" @onclick="Cancel">Cancel</button>
                 </form>
             </div>
@@ -126,13 +100,13 @@
                 <br />
                 <form>
                     @* <label>Upload File:</label>
-                    @* <input type="file" @onchange="HandleFileChange" /> *@
+                @* <input type="file" @onchange="HandleFileChange" /> *@
                     @* <input type="file" @onchange="HandleFileChange"   /> *@
-                    <input type="text" id="name" @bind="fileName" class="form-control" /> 
+                    <input type="text" id="name" @bind="fileName" class="form-control" />
                     <label for="fileupload">Upload Document:</label>
                     <InputFile OnChange="HandleFileSelected" id="fileupload" class="form-control" />
                     <br />
-                    <button type="submit" class="btn btn-outline-success m-3 p-2 " >Submit</button>
+                    <button type="submit" class="btn btn-outline-success m-3 p-2 ">Submit</button>
                     <button type="submit" class="btn btn-outline-danger p-2" @onclick="Cancel">Cancel</button>
                 </form>
             </div>
@@ -153,36 +127,26 @@
     private string selectedOption = "";
     private string testName = "";
     private string _pdfFolderPath = "C:\\Users\\6147954\\Documents\\QuestionBank.Trainer\\QuestionBankUI.Trainer\\QuestionBankUI.Trainer\\pdf\\";
-    private string subjectError;
-    private string TopicError;
-    private string DifficultyError;
-    private string QuestionTextError;
-    private string OptionAError;
-    private string OptionBError;
-    private string OptionDError;
-    private string OptionCError;
-    private string CorrectAnswerError;
-    private string exp;
+
     private string fileName = "";
-    private IBrowserFile uploadedFile;
+    private IBrowserFile selectedFile;
     private string errorMessage;
     private bool isSuccess = false;
     //public IFormFile file;
-    private QuestionBankDll.Trainer.Models.Question singleQuestion = new QuestionBankDll.Trainer.Models.Question();
-
+    private QuestionBankDll.Trainer.Dtos.QuestionDtos singleQuestion = new QuestionBankDll.Trainer.Dtos.QuestionDtos();
     private void HandleSelectChange(ChangeEventArgs e)
     {
         selectedOption = (e.Value as string)?.Trim();
     }
 
-    private void HandleFileChange(ChangeEventArgs e)
-    {
-        uploadedFile = (e.Value as IBrowserFile);
-    }
-    private void HandleFileChange(InputFileChangeEventArgs e)
-    {
-        uploadedFile = e.File;
-    }
+    // private void HandleFileChange(ChangeEventArgs e)
+    // {
+    //     uploadedFile = (e.Value as IBrowserFile);
+    // }
+    // private void HandleFileChange(InputFileChangeEventArgs e)
+    // {
+    //     uploadedFile = e.File;
+    // }
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         try
@@ -213,19 +177,44 @@
     {
         try
         {
-            var file = e.File;
-            if (file != null)
+            var selectedFile = e.File;
+            if (selectedFile != null)
             {
-                using var content = new MultipartFormDataContent();
-                using var stream = file.OpenReadStream(maxAllowedSize: 10_000_000);
-                var streamContent = new StreamContent(stream);
+                // using var content = new MultipartFormDataContent();
+                // using var stream = file.OpenReadStream(maxAllowedSize: 10_000_000);
+                // var streamContent = new StreamContent(stream);
 
-                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                // streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
 
-                content.Add(streamContent, "file", fileName);
-                var response = await Http.PostAsync("AddBulkQuestions", content);
-                
+                // content.Add(streamContent, "file", file.Name);
+                // //var response = await Http.PostAsync("AddBulkQuestions", content);
 
+                var memoryStream = new MemoryStream();
+                await selectedFile.OpenReadStream().CopyToAsync(memoryStream);
+
+                var formFile = new FormFile(
+                    baseStream: memoryStream,
+                    baseStreamOffset: 0,
+                    length: memoryStream.Length,
+                    name: selectedFile.Name,
+                    fileName: selectedFile.Name
+                )
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = selectedFile.ContentType
+                    };
+                memoryStream.Position = 0;
+                // await service.AddQuestionInBulkAsync(formFile);
+
+                using (var content = new MultipartFormDataContent())
+                {
+                    var fileContent = new StreamContent(formFile.OpenReadStream());
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(formFile.ContentType);
+                    content.Add(fileContent, "file", formFile.FileName);
+
+                    var response = await Http.PostAsync("AddBulkQuestions", content);
+
+                }
 
             }
             else
@@ -252,8 +241,10 @@
     {
         try
         {
-            singleQuestion.CreatedBy = 1;
-            service.AddQuestionAsync(singleQuestion);
+            //singleQuestion.CreatedBy = 1;
+            // await Http.PostAsJsonAsync("AddSingleQuestion",singleQuestion);
+
+            await service.AddQuestionAsync(singleQuestion);
             navigate.NavigateTo("/");
         }
         catch (Exception ex)
@@ -264,31 +255,11 @@
 
     }
 
-    private void ValidateSingleQuestion()
-    {
-        subjectError = string.IsNullOrWhiteSpace(singleQuestion.Subject) ? "Subject is required" : null;
-        TopicError = string.IsNullOrWhiteSpace(singleQuestion.Topic) ? "Topic is required" : null;
-        DifficultyError = string.IsNullOrWhiteSpace(singleQuestion.DifficultyLevel) ? "Difficulty Level is required" : null;
-        QuestionTextError = string.IsNullOrWhiteSpace(singleQuestion.QuestionText) ? "Question Text is required" : null;
-
-        // Add similar checks for OptionA, OptionB, OptionC, OptionD, and CorrectAnswer.
-        OptionAError = string.IsNullOrWhiteSpace(singleQuestion.OptionA) ? "Field is required" : null;
-
-        OptionBError = string.IsNullOrWhiteSpace(singleQuestion.OptionB) ? "Field is required" : null;
-
-        OptionCError = string.IsNullOrWhiteSpace(singleQuestion.OptionC) ? "Field is required" : null;
-
-        OptionDError = string.IsNullOrWhiteSpace(singleQuestion.OptionD) ? "Field is required" : null;
-
-        CorrectAnswerError = string.IsNullOrWhiteSpace(singleQuestion.CorrectAnswer) ? "Field is required" : null;
-
-        exp = string.IsNullOrWhiteSpace(singleQuestion.Explaination) ? "Field is required" : null;
-    }
-    
 
 
 
- 
+
+
 
     private void Cancel()
     {
@@ -296,3 +267,4 @@
     }
 
 }
+

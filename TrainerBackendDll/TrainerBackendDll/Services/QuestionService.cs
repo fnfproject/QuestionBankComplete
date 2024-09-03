@@ -21,7 +21,7 @@ namespace QuestionBankDll.Trainer.Services
 {
     public interface IQuestionService
     {
-        public void AddQuestion(Question question);
+        public Task AddQuestion(QuestionDtos question);
         //public Task AddQuestionsInBulk(IFormFile file);
         public string ProcessOption(ExcelRange cell, string _imageFolder);
         public Task<List<Question>> GetAllQuestions();
@@ -42,17 +42,30 @@ namespace QuestionBankDll.Trainer.Services
         {
             _context = context;
         }
-        public void AddQuestion(Question question)
+        public async Task AddQuestion(QuestionDtos questionDtos)
         {
             try
             {
 
-                question.CreatedBy = 1;
-                question.CreatedAt = DateTime.Now;
-                
-                
+                var question = new Question
+                {
+                    Subject = questionDtos.Subject,
+                    Topic = questionDtos.Topic,
+                    DifficultyLevel = questionDtos.DifficultyLevel,
+                    QuestionText = questionDtos.QuestionText,
+                    OptionA = questionDtos.OptionA,
+                    OptionB = questionDtos.OptionB,
+                    OptionC = questionDtos.OptionC,
+                    OptionD = questionDtos.OptionD,
+                    CorrectAnswer = questionDtos.CorrectAnswer,
+                    Explaination = questionDtos.Explaination,
+                    CreatedBy = 1,
+                    CreatedAt = DateTime.Now
+                };
+
+
                 _context.Questions.Add(question);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

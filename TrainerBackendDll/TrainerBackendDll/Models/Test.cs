@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TrainerBackendDll.Dtos;
 
 namespace QuestionBankDll.Trainer.Models
 {
@@ -14,5 +15,8 @@ namespace QuestionBankDll.Trainer.Models
         public DateTime ExpiryTime { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Hyperlinks { get; set; }
+
+        public ICollection<TestQuestion> TestQuestions { get; set; }
+
     }
 }

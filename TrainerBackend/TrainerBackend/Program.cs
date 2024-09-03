@@ -3,6 +3,7 @@ using QuestionBankApi.Trainer.Services;
 using QuestionBankAPI.Trainer.Services;
 using QuestionBankDll.Trainer.Models;
 using QuestionBankDll.Trainer.Services;
+using TrainerBackendDll.Services;
 
 namespace QuestionBankApi.Trainer
 {
@@ -17,6 +18,8 @@ namespace QuestionBankApi.Trainer
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IResultService, ResultService>();
             services.AddTransient<IPracticePaperService, PracticePaperService>();
+            services.AddTransient<ITestService, TestService>();
+
         }
         public static void Main(string[] args)
         {

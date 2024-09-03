@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrainerBackendDll.Dtos;
 
 namespace QuestionBankDll.Trainer.Models
 {
@@ -33,6 +34,8 @@ namespace QuestionBankDll.Trainer.Models
         public string Explaination { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
+        public ICollection<TestQuestion>? TestQuestions { get; set; }
+
     }
     public class QuestionDbContext : DbContext
     {
@@ -61,13 +64,32 @@ namespace QuestionBankDll.Trainer.Models
         public DbSet<TestTrainee> TestTrainees { get; set; }
         public DbSet<TestPaper> TestPapers { get; set; }
         public DbSet<UserTbl> UserTbls { get; set; }
+        public DbSet<TestQuestion> TestQuestions { get; set; }
+        public DbSet<UserAnswer> UserAnswers { get; set; }
+        public DbSet<TestResult> TestResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Question>().ToTable("Question");
+            modelBuilder.Entity<UserAnswer>().ToTable("UserAnswer");
+            modelBuilder.Entity<TestResult>().ToTable("TestResult");
+
             modelBuilder.Entity<PracticePaper>().HasKey(p => p.PaperId);
             modelBuilder.Entity<PracticePaper>().ToTable("PracticePaper");
             modelBuilder.Entity<Test>().ToTable("Test");
+            modelBuilder.Entity<TestQuestion>().ToTable("TestQuestion");
+            modelBuilder.Entity<TestQuestion>()
+            .HasKey(tq => new { tq.TestId, tq.QuestionId });
+
+            modelBuilder.Entity<TestQuestion>()
+                .HasOne(tq => tq.Test)
+                .WithMany(t => t.TestQuestions)
+                .HasForeignKey(tq => tq.TestId);
+
+            modelBuilder.Entity<TestQuestion>()
+                .HasOne(tq => tq.Question)
+                .WithMany(q => q.TestQuestions)
+                .HasForeignKey(tq => tq.QuestionId);
 
         }
 

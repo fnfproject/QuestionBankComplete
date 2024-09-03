@@ -142,7 +142,7 @@ h3 {
     text-shadow: 2px 2px 5px red;
 }
 
-footer {
+/*footer {
     width: 100%;
     bottom: 0;
     background-color: #375b8a;
@@ -150,6 +150,45 @@ footer {
     text-align: center;
     color: white;
  
+}*/
+
+footer {
+    width: 100%;
+    /*bottom: 0;*/
+    background-color: #375b8a;
+    padding: 20px;
+    /*text-align: center;*/
+    color: white;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.footer-icon-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 5px;
+}
+
+.footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 24px;
+}
+
+    .footer-item p {
+        margin: 5px 0 0;
+        font-size: 14px;
+    }
+
+.footer-text {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
 }
 
 header {
@@ -157,14 +196,14 @@ header {
     width: 100%;
     padding: 1rem;
     background-color: lightblue;
-    position:fixed;
-    z-index :1000;
+    position: fixed;
+    z-index: 1000;
 }
+
 #mainheader {
     position: fixed;
     top: 0;
-    left:0;
-
+    left: 0;
     /*z-index: 1000;*/
 }
 
