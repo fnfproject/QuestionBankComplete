@@ -1,0 +1,131 @@
+﻿@page "/viewresults"
+@using QuestionBankDll.Trainer.Dtos
+@inject NavigationManager navigator
+@inject QuestionBankUI.Trainer.Services.ResultUIService service;
+
+<head>
+    <link rel="stylesheet" href="
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<br />
+<div class="container">
+    <br />
+    <h1>View Results</h1>
+    <br />
+
+    <label><h4>Select an option:</h4></label>
+    <select @onchange="HandleSelectChange">
+        <option value="">Select an option</option>
+        <br />
+        <option value="trainee" ><h4>Get Results of a Trainee</h4></option>
+        <option value="test"><h4>Get Results of a Test</h4></option>
+    </select>
+    @if (selectedOption == "trainee")
+    {
+        <br/>
+        <h4>Results of Trainee</h4><br/>
+        <input type="text" @bind="traineeName"  />
+        <button type="submit" @onclick="() => NavigateToTraineeResults(traineeName)" class="btn btn-info">Search</button>
+        <br/>
+        @if(tests.Any())
+        {
+            <br />
+        <table class="table table-bordered table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>Test Name</th>
+                    <th>Total Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var test in tests)
+                {
+                    <tr>
+                        <td>@test.TestName</td>
+                        <td>@test.Score</td>
+                        
+                    </tr>
+                }
+            </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Results Found</p>
+        }
+        <br/>
+        
+    }
+    else if (selectedOption == "test")
+    {
+        <br/>
+        <h4>Results of Tests</h4><br/>
+        <input type="text" @bind="testName" />
+        <button type="submit" @onclick="() => NavigateToTestResults(testName)" class="btn btn-info">Search</button>
+        <br />
+        @if (trainees.Any())
+        {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Trainee Name</th>
+                    <th>Test Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trainee in trainees)
+                {
+                    <tr>
+                        <td>@trainee.TraineeName</td>
+                        <td>@trainee.Score</td>
+                       
+                    </tr>
+                }
+            </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No Results Found</p>
+
+        }
+        <br />
+    }
+    <br />
+    <button @onclick="NavigateToHome" class="btn btn-outline-primary">Back</button>
+</div>
+<br />
+
+
+
+@code {
+    private string traineeName = "";
+        private string testName = "";
+    private string selectedOption = "";
+    private List<TestTraineeResultAPIDto> trainees = new List<TestTraineeResultAPIDto>();
+    private List<TraineeTestResultDto> tests = new List<TraineeTestResultDto>();
+
+    private void HandleSelectChange(ChangeEventArgs e)
+    {
+        selectedOption = (e.Value as string)?.Trim();
+    }
+
+    private async void NavigateToTraineeResults(string traineeName)
+    {
+        tests=await service.GetResultByTraineeNameAsync(traineeName);
+    }
+
+    private async void NavigateToTestResults(string testName)
+    {
+        trainees =await service.GetResultByTestNameAsync(testName);
+    }
+    private void NavigateToHome(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/viewresults");
+    }
+
+
+     
+
+}
+

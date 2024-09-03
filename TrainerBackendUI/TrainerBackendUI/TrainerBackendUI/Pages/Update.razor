@@ -1,0 +1,127 @@
+﻿@page "/update/{id:int}"
+@using QuestionBankDll.Trainer.Models
+@inject QuestionBankUI.Trainer.Services.QuestionUIService service
+@inject NavigationManager navigate;
+@inject HttpClient Http
+<div class="container">
+
+    <br />
+    <div>
+        <br />
+        <h4>Update Question</h4>
+        <br />
+        @if (singleQuestion != null)
+        {
+            <div class="form-group row">
+
+            <label class="col-sm-2 col-form-label">Subject : </label>
+            <div class="col-sm-10">
+                <InputText @bind-Value=singleQuestion.Subject class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Topic : </label>
+            <div class="col-sm-10">
+                <InputText @bind-Value=singleQuestion.Topic class="form-control" />
+                <br />
+            </div>
+
+                <label class="col-sm-2 col-form-label">Difficulty Level: </label>
+
+                <div>
+              
+                    <select class="col-sm-10" @bind=singleQuestion.DifficultyLevel>
+                    <option value="Easy">Easy</option>
+                    <option value="Mediun">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+                <br />
+           </div>
+
+
+            <label class="col-sm-2 col-form-label">Question Text : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.QuestionText class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Option A : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.OptionA class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Option B : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.OptionB class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Option C : </label>
+            <div class="col-sm-10">
+                <InputText @bind-Value=singleQuestion.OptionC class="form-control" />
+                <br />
+            </div>
+            <label class="col-sm-2 col-form-label">Option D : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.OptionD class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Correct Answer : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.CorrectAnswer class="form-control" />
+                <br />
+            </div>
+
+            <label class="col-sm-2 col-form-label">Explaination : </label>
+            <div class="col-sm-10">
+                    <InputText @bind-Value=singleQuestion.Explaination class="form-control" />
+            </div>
+
+        </div>
+        <button type="submit" class="btn btn-outline-success m-10 p-10" @onclick="UpdateQuestion">Submit</button>
+            <button type="submit" class="btn btn-outline-danger m-10 p-10" @onclick="Cancel">Cancel</button>
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private Question singleQuestion = new Question();
+    protected async override Task OnInitializedAsync()
+    {
+        singleQuestion = await service.GetQuestionById(id);
+
+    }
+
+
+    private async void UpdateQuestion()
+    {
+
+        singleQuestion.QuestionId = id;
+        singleQuestion.CreatedBy = 1;
+        try{
+            //await Http.PutAsJsonAsync($"Update/{id}", singleQuestion);
+            await service.UpdateQuestionAsync(singleQuestion);
+
+        }
+        catch(Exception ex)
+        {
+            throw ex.InnerException;
+        }
+        navigate.NavigateTo("/view");
+    }
+    private void Cancel()
+    {
+        navigate.NavigateTo("/");
+    }
+
+}
+

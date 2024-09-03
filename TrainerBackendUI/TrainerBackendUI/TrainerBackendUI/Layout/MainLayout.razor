@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+
+      <head>
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+5n5z5ta3FX7jB4I6bzdu16f7A5t5F5Fj2xj"
+          crossorigin="anonymous" /> *@
+    <link rel="stylesheet" href="
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+      </head>
+   
+
+    <header id="mainheader">
+    <div class="top">
+
+        <i><img src="sample-data/fnflogo.png" alt="Company Logo" style="height: 40px;" /></i> 
+        
+        <div style="margin-left: auto;">
+           <h4 class="navbar-toggler">
+                <a id="anchor" href="/" class="m-3 navbar-toggler"><i class="fa fa-home" /> Home</a>
+                <a id="anchor" href="/about" class="m-3 navbar-toggler"><i class="fa fa-info-circle" /> About</a>
+                <a id="anchor" href="http://localhost:5072/" class="m-3 navbar-toggler"> <i class="fa fa-power-off" /> Logout</a>
+            </h4>
+        </div>
+    </div>
+    
+                
+        @* <div class="top">
+            <a class="m-3">
+                <i></i>Welcome to FNFI Training!
+            </a>
+            <a class="m-3">
+                <i class="fa fa-dashboard"></i>Hi Trainer!
+            </a>
+
+            <a class="m-3">About</a>
+
+            <a class="m-3">Logout</a>
+
+        </div> *@
+    </header>
+
+    <br/>
+<div>
+    <br/>
+    <main>
+        <br />
+        <br />
+        @Body
+
+
+    </main>
+</div>
+<br/>
+
+<div>
+    <footer>
+        
+        <i>&copy;Copyrights 2012 - 2024 Fidelity National Financial<br>All rights reserved.</i>
+    </footer>
+</div>

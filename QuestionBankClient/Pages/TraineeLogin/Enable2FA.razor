@@ -1,0 +1,87 @@
+﻿@page "/Traineeenable-2fa"
+@inject HttpClient Http
+@using QuestionBankClient.Model
+@using System.Text
+@using System.Text.Json
+@using System.Net.Http
+@using System.Net.Http.Headers
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem; animation: fadeIn 1.5s ease;">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4" style="color: #007bff;">
+                        <i class="fas fa-shield-alt"></i> Enable Two-Factor Authentication
+                    </h3>
+
+                    <EditForm Model="@enable2FAModel" OnValidSubmit="HandleEnable2FA">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user"></i> Username:
+                            </label>
+                            <InputText id="username" class="form-control" @bind-Value="enable2FAModel.Username" placeholder="Enter your username" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" style="border-radius: 2rem;">
+                            <i class="fas fa-shield-alt"></i> Enable 2FA
+                        </button>
+                    </EditForm>
+
+                    @if (QrCodeSrc != null)
+                    {
+                        <div class="text-center mt-3">
+                            <h4>Scan this QR Code with your authenticator app:</h4>
+                            <img src="@QrCodeSrc" alt="QR Code" class="img-fluid mt-2" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@code {
+    private Enable2FAModel enable2FAModel = new Enable2FAModel();
+    private string QrCodeSrc;
+
+    private async Task HandleEnable2FA()
+    {
+        var requestContent = new StringContent(
+            JsonSerializer.Serialize(enable2FAModel),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        var response = await Http.PostAsync("api/Trainee/enable-2fa", requestContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var imageBytes = await response.Content.ReadAsByteArrayAsync();
+            QrCodeSrc = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+        }
+        else
+        {
+            // Handle error (you can log it or show an error message)
+        }
+    }
+}

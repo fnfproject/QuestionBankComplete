@@ -1,0 +1,69 @@
+﻿@page "/"
+@inject NavigationManager navigator;
+
+<PageTitle>Home</PageTitle>
+<br />
+<div class="card-group ">
+    <div class="card">
+        <img class="card-img-top" src="sample-data/addimage.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Add New Question(s)</h5>
+            <p class="card-text">You can add a Single Question or add Questions in Bulk.</p>
+            <button class="btn btn-primary p-2 form-control" @onclick="NavigateToAddPage">Add</button>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <img class="card-img-top" src="sample-data/view.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">View Question(s)</h5>
+            <p class="card-text">You can View, Update and Delete the Questions.</p>
+            <button class="btn btn-primary p-2 form-control" @onclick="NavigateToViewPage">View</button>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+        <img class="card-img-top" src="sample-data/results.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Trainee Results</h5>
+            <p class="card-text">You can view the results of the Trainees.</p>
+            <button class="btn btn-primary p-2 form-control" @onclick="NavigateToViewResultsPage">View Trainee Results</button>
+        </div>
+
+    </div>
+
+
+
+    <div class="card">
+        <img class="card-img-top" src="sample-data/progress.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">Dashboard</h5>
+            <p class="card-text">You can have a view of the Live Tests and Practice Papers</p>
+            <button class="btn btn-primary p-2 form-control" @onclick="NavigateToProgressPage">View Dashboard</button>
+
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private void NavigateToAddPage(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/add");
+    }
+    private void NavigateToViewPage(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/view");
+    }
+    private void NavigateToViewResultsPage(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/viewresults");
+    }
+    private void NavigateToProgressPage(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/progress");
+    }
+}

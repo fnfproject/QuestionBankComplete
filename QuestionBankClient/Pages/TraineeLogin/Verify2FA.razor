@@ -1,0 +1,73 @@
+﻿@page "/Traineeverify-2fa"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title text-center">
+                        <i class="bi bi-shield-lock-fill"></i> Verify Two-Factor Authentication
+                    </h3>
+                    <hr />
+                    <EditForm Model="@verify2FAModel" OnValidSubmit="HandleVerify2FA">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person-fill"></i> Username:
+                            </label>
+                            <InputText id="username" class="form-control" @bind-Value="verify2FAModel.Username" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="code" class="form-label">
+                                <i class="bi bi-key-fill"></i> 2FA Code:
+                            </label>
+                            <InputText id="code" class="form-control" @bind-Value="verify2FAModel.Code" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-circle-fill"></i> Verify 2FA
+                        </button>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(verificationMessage))
+                    {
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle-fill"></i> @verificationMessage
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Verify2FADto verify2FAModel = new Verify2FADto();
+    private string verificationMessage;
+
+    private async Task HandleVerify2FA()
+    {
+        var response = await Http.PostAsJsonAsync("api/Trainee/verify-2fa", verify2FAModel);
+        if (response.IsSuccessStatusCode)
+        {
+            verificationMessage = "2FA Verification successful!";
+            // Navigate to the trainee login page after successful verification
+            Navigation.NavigateTo("/Traineelogin");
+        }
+        else
+        {
+            verificationMessage = "Invalid 2FA Code. Please try again.";
+        }
+    }
+
+    public class Verify2FADto
+    {
+        public string Username { get; set; }
+        public string Code { get; set; }
+    }
+}

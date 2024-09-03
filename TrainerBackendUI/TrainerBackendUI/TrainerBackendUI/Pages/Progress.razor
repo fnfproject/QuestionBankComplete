@@ -1,0 +1,126 @@
+﻿@page "/progress"
+@inject QuestionBankUI.Trainer.Services.PracticePaperUIService service;
+@inject QuestionBankUI.Trainer.Services.ResultUIService _service;
+@inject NavigationManager Navigaton
+@inject IJSRuntime JsRuntime;
+@inject HttpClient Http;
+@using QuestionBankDll.Trainer.Dtos;
+
+
+<br />
+<h1 style="text-align:center">Dashboard</h1>
+<br />
+<div class="container">
+
+    <br />
+
+    <h4>Tests</h4>
+    <br />
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Test Name</th>
+                <th>Start Time</th>
+                <th>Expiry Time</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var test in AllTests)
+            {
+                <tr>
+                    <td>@test.TestName</td>
+                    <td>@test.StartTime</td>
+                    <td>@test.ExpiryTime</td>
+                    
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<br />
+<div class="container">
+    <h4>Practice Papers</h4>
+    <br/>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Practice Papers</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                @foreach (var practicePaper in PracticePapers)
+                {
+                    <tr>
+                    <td>@practicePaper</td>
+                    <td>
+                        <button class="btn btn-outline-primary" @onclick= "() => DownloadPdf(practicePaper)"><i class="fa fa-eye"/>Download</button>
+                        <button class="btn btn-outline-danger" @onclick = "() => DeletePaper(practicePaper)"><i class="fa fa-trash" />Delete</button>
+                    </td>
+                    </tr>
+
+                }
+            
+        </tbody>
+    </table>
+
+</div>
+<br/>
+
+@code {
+    private List<string> PracticePapers = new List<string>();
+    private List<TestDtos> AllTests = new List<TestDtos>();
+    protected override async Task OnInitializedAsync()
+    {
+        PracticePapers = await service.GetAllPracticePapersAsync();
+        AllTests = await _service.GetAllTestsAsync();
+    }
+
+    private async void DownloadPdf(string pdfName)
+    {
+        //await service.DownloadPracticePaperAsync(pdfName);
+        try
+        {
+
+            var response = await Http.GetAsync($"DownloadPracticePaper/{pdfName}");
+            // response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
+            {
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var fileName = response.Content.Headers.ContentDisposition?.FileName ?? pdfName;
+                await JsRuntime.InvokeVoidAsync("saveAsFile", fileName, "application/pdf", fileBytes);
+            }
+            else
+            {
+                Console.WriteLine("File not found");
+            }
+            // await JsRuntime.InvokeVoidAsync("saveAsFile", pdfName, Convert.ToBase64String(fileBytes));
+        }
+        catch(Exception ex)
+        {
+            throw ex.InnerException;
+        }
+    }
+
+    private async void DeletePaper(string practicePaper)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+
+            await service.DeletePracticePaperAsync(practicePaper);
+        }
+        Navigaton.Refresh();
+
+    }
+
+
+}

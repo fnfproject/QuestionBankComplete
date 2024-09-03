@@ -1,0 +1,60 @@
+﻿@page "/Practicepaper1"
+
+<h3 class="text-center my-4 fade-in">Practice Paper 1: C# Basics</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="shadow-sm p-3 mb-4 bg-white rounded fade-in">
+                <h4><i class="bi bi-question-circle"></i> Questions</h4>
+                <ul class="list-group">
+                    @foreach (var question in Questions)
+                    {
+                        <li class="list-group-item">
+                            <strong>@question.Text</strong>
+                            <div class="mt-2">
+                                @foreach (var option in question.Options)
+                                {
+                                    <div>@option</div>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <button class="btn btn-primary" onclick="window.print()">Download</button>
+    </div>
+</div>
+
+@code {
+    public class Question
+    {
+        public string Text { get; set; }
+        public List<string> Options { get; set; }
+
+        public Question(string text, List<string> options)
+        {
+            Text = text;
+            Options = options;
+        }
+    }
+
+    private List<Question> Questions = new List<Question>
+    {
+        new Question("What is the correct way to declare a variable in C#?", new List<string> { "int x;", "integer x;", "var x;", "dim x;" }),
+        new Question("Which of the following is not a C# keyword?", new List<string> { "static", "virtual", "private", "int32" }),
+        new Question("Which method is used to output text in C#?", new List<string> { "Console.WriteLine()", "print()", "System.out.println()", "echo()" }),
+        new Question("Which of the following is a value type in C#?", new List<string> { "int", "string", "object", "class" }),
+        new Question("What does the 'using' directive do in C#?", new List<string> { "Imports a namespace", "Defines a class", "Creates a variable", "Opens a file" }),
+        new Question("Which operator is used to concatenate strings in C#?", new List<string> { "+", "&", "&&", "|" }),
+        new Question("Which keyword is used to handle exceptions in C#?", new List<string> { "catch", "throw", "try", "finally" }),
+        new Question("What is the output of the following code: Console.WriteLine(3 + 4 * 2);", new List<string> { "11", "14", "16", "10" }),
+        new Question("Which of the following is not a C# access modifier?", new List<string> { "public", "private", "protected", "internalize" }),
+        new Question("Which loop is guaranteed to execute at least once in C#?", new List<string> { "do-while", "while", "for", "foreach" }),
+    };
+}

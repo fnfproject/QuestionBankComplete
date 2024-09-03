@@ -1,0 +1,136 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject RoleService RoleService
+@using BlazorTrainee.Model
+
+<div class="page">
+    @if (!IsHomePage())
+    {
+        <div class="top-row ps-3 navbar navbar-dark bg-dark fixed-top">
+            <div class="container-fluid d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand" href="/"><i class="bi bi-pc-display-horizontal"></i> QuestionBankClient</a>
+                    <a class="navbar-brand ms-3" href="/">Back to Home</a>
+                </div>
+
+                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                    @*  <span class="navbar-toggler-icon"></span> *@
+                </button>
+
+                <ul class="navbar-nav d-flex flex-row ms-auto">
+                    @if (IsOnTraineeDashboard())
+                    {
+                        <li class="nav-item mx-2">
+                            <button class="btn btn-danger" @onclick="Logout">Logout</button>
+                        </li>
+                    }
+                    else if (IsRoleSelected())
+                    {
+                        <li class="nav-item mx-2">
+                            <NavLink class="nav-link" href="@GetRegisterUrl()">Register</NavLink>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <NavLink class="nav-link" href="@GetLoginUrl()">Login</NavLink>
+                        </li>
+
+                        @if (IsTraineeOrTrainer())
+                        {
+                            <li class="nav-item mx-2">
+                                <NavLink class="nav-link" href="@GetEnable2fa()">Enable 2FA</NavLink>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <NavLink class="nav-link" href="@GetVerify2fa()">Verify 2FA</NavLink>
+                            </li>
+                        }
+
+                        @if (IsTrainerAndNeedsAdminVerification())
+                        {
+                            <li class="nav-item mx-2">
+                                <NavLink class="nav-link" href="@GetVerifyAdminUrl()">Verify Admin</NavLink>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private string GetRegisterUrl()
+    {
+        var role = RoleService.GetRole();
+        return $"/{role.ToLower()}register";
+    }
+
+    private string GetLoginUrl()
+    {
+        var role = RoleService.GetRole();
+        return $"/{role.ToLower()}login";
+    }
+
+    private string GetEnable2fa()
+    {
+        var role = RoleService.GetRole();
+        return $"/{role.ToLower()}enable-2fa";
+    }
+
+    private string GetVerify2fa()
+    {
+        var role = RoleService.GetRole();
+        return $"/{role.ToLower()}verify-2fa";
+    }
+
+    private string GetVerifyAdminUrl()
+    {
+        return "/TrainerVerifyAdminCode";
+    }
+
+    private bool IsHomePage()
+    {
+        return Navigation.Uri.EndsWith("/"); // This checks if the current URL is the home page
+    }
+
+    private bool IsRoleSelected()
+    {
+        return !string.IsNullOrEmpty(RoleService.GetRole());
+    }
+
+    private bool IsTraineeOrTrainer()
+    {
+        var role = RoleService.GetRole().ToLower();
+        return role == "trainee" || role == "trainer";
+    }
+
+    private bool IsOnTraineeDashboard()
+    {
+        return Navigation.Uri.Contains("traineedashboard");
+    }
+
+    private bool IsTrainerAndNeedsAdminVerification()
+    {
+        var role = RoleService.GetRole().ToLower();
+        return role == "trainer";
+    }
+
+    private void Logout()
+    {
+        // Clear any stored tokens or session data here if necessary
+        Navigation.NavigateTo("/Traineelogin");
+    }
+}

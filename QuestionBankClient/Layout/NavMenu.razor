@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+@inject RoleService RoleService
+@using BlazorTrainee.Model
+
+<nav class="nav-menu">
+    @if (RoleService.GetRole() == "Trainee")
+    {
+        <!-- Trainee specific links -->
+        <NavLink class="nav-link" href="/Traineelogin">Login</NavLink>
+        <NavLink class="nav-link" href="/Traineeregister">Register</NavLink>
+         <NavLink class="nav-link" href="/Traineeenable-2fa">Enable 2FA</NavLink>
+          <NavLink class="nav-link" href="/Traineeverify-2fa">Verify 2FA</NavLink>
+
+    }
+    else if (RoleService.GetRole() == "Trainer")
+    {
+        <!-- Trainer specific links -->
+        <NavLink class="nav-link" href="/Trainerlogin">Login</NavLink>
+        <NavLink class="nav-link" href="/Trainerregister">Register</NavLink>
+         <NavLink class="nav-link" href="/Trainerenable-2fa">Enable 2FA</NavLink>
+          <NavLink class="nav-link" href="/Trainerverify-2fa">Verify 2FA</NavLink>
+    }
+    else if (RoleService.GetRole() == "Admin")
+    {
+        <!-- Admin specific links -->
+        <NavLink class="nav-link" href="/Adminlogin">Login</NavLink>
+        <NavLink class="nav-link" href="/Adminregister">Register</NavLink>
+        <NavLink class="nav-link" href="/Adminforgotpassword">Forgot Password</NavLink>
+
+    }
+</nav>

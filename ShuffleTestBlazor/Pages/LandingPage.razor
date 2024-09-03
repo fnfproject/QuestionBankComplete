@@ -1,0 +1,29 @@
+﻿@page "/landing"
+
+@inject NavigationManager Navigation
+
+<div class="container mt-5">
+    <div class="card border-primary mb-3" style="max-width: 540px;">
+        <div class="card-header text-white bg-primary">
+            <h4>Your Test is Live!</h4>
+        </div>
+        <div class="card-body text-primary">
+            <h5 class="card-title">Please complete this within the deadline.</h5>
+            <p class="card-text">
+                Make sure you have read all the instructions carefully before starting the test.
+                Click the button below when you are ready.
+            </p>
+            <!-- Button to start the test -->
+            <button @onclick="NavigateToTestPage" class="btn btn-success btn-lg mt-3">Take the Test Now</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void NavigateToTestPage()
+    {
+        // Navigate to the Test page
+        Navigation.NavigateTo("/test");
+    }
+}
+

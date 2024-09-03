@@ -1,0 +1,146 @@
+﻿@page "/test/{testName}/selectedQuestionIds={questionIds}"
+@using QuestionBankDll.Trainer.Dtos
+@using QuestionBankDll.Trainer.Models
+@using System.Text.Json
+@using QuestionBankDll.Trainer.Services
+@inject NavigationManager navigator
+@inject HttpClient Http
+
+<div style="margin:25px; padding:25px">
+    <br />
+    <h1 style="text-align:center">Take Quiz</h1>
+    <br />
+    <br />
+    @if (questions != null && questions.Any())
+    {
+        <p><strong><h4 style="text-align:center">Test Name : @testName</h4></strong> </p>
+        <br />
+        <EditForm Model="QuizAnswers" style="align-items:center" OnValidSubmit="GenerateHyperlink">
+
+            @foreach (var question in questions)
+            {
+                <div>
+                    <p><strong>@question.QuestionText</strong></p>
+                    @* <InputRadioGroup @bind-Value="QuizAnswers[question.QuestionId]"> *@
+
+                    <input type="radio" @bind-value="QuizAnswers[question.QuestionId]" name="@question.QuestionId" /> @question.OptionA <br />
+                    <input @bind-value="QuizAnswers[question.QuestionId]" type="radio" name="@question.QuestionId" /> @question.OptionB <br />
+                    <input @bind-value="QuizAnswers[question.QuestionId]" type="radio" name="@question.QuestionId" /> @question.OptionC <br />
+                    <input @bind-value="QuizAnswers[question.QuestionId]" type="radio" name="@question.QuestionId" /> @question.OptionD <br />
+                    @* </InputRadioGroup> *@
+                </div>
+                <hr />
+            }
+            <br />
+            <button type="button" @onclick="SubmitTest" class="btn btn-outline-success">Submit Test</button>
+            <br/>
+
+        </EditForm>
+        <button type="button" @onclick="GenerateHyperlink" class="btn btn-outline-primary">Generate Quiz Hyperlink</button>
+        <br />
+    }
+    else if (isLoading)
+    {
+        <p>Loading....</p>
+    }
+    else
+    {
+        <p>Oops, No Questions Available!</p>
+    }
+    @if (Score.HasValue)
+    {
+        <p>Your Score: @Score</p>
+    }
+</div>
+<br />
+
+@code {
+    [Parameter]
+    public string questionIds { get; set; }
+    [Parameter]
+    public string testName { get; set; }
+
+    // public class RadioModel
+    // {
+    //     public string SelectedOption { get; set; }
+    // }
+    // private RadioModel model = new RadioModel();
+
+    private List<int> selectedQuestionIds;
+    private List<Question> questions;
+    private Dictionary<int, string> QuizAnswers = new Dictionary<int, string>();
+    private bool isLoading = true;
+    private int? Score;
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(questionIds))
+            {
+                selectedQuestionIds = questionIds.Split(',').Select(int.Parse).ToList();
+            }
+            var response = await Http.PostAsJsonAsync("generate-quiz", selectedQuestionIds);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(responseContent))
+                {
+                    try
+                    {
+                        questions = await response.Content.ReadFromJsonAsync<List<Question>>();
+                        foreach (var question in questions)
+                        {
+                            QuizAnswers[question.QuestionId] = string.Empty;
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        Console.WriteLine($"JSON parsing error : {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The response content is empty");
+                    questions = new List<Question>();
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Error : {response.StatusCode}");
+            }
+            // questions =  await response.Content.ReadAsStringAsync();
+            // foreach(var question in questions)
+            // {
+            //     QuizAnswers[question.QuestionId] = string.Empty;
+            // }
+        }
+        finally
+        {
+            isLoading = false;
+
+        }
+        // var existingData = await service.ReadQuizDataAsync();
+        // if(!string.IsNullOrEmpty(testName) && !string.IsNullOrEmpty(questionIds))
+        // {
+        //     existingData[testName] = questionIds;
+        //     await service.WriteQuizDataAsync(existingData);
+        // }
+
+    }
+    private async Task SubmitTest()
+    {
+        var submissions = QuizAnswers.Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => new TestSubmissionDto
+            {
+                QuestionId = x.Key,
+                SelectedAnswer = x.Value
+            }).ToList();
+        var response = await Http.PostAsJsonAsync("submit-quiz", submissions);
+        var result = await response.Content.ReadFromJsonAsync<dynamic>();
+        Score = (int)result?.Score;
+    }
+    private async Task GenerateHyperlink()
+    {
+        
+    }
+}

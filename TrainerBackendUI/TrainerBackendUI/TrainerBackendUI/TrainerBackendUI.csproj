@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\Images\19bbcb30-ad8b-4d75-a1f5-3aa8bd3010be.jpeg" />
+    <Content Remove="wwwroot\Images\1a48104f-cce4-4662-a2f8-9cadb38612d7.jpg" />
+    <Content Remove="wwwroot\Images\1cbba20f-27d0-4448-a855-61f8edc55b93.jpeg" />
+    <Content Remove="wwwroot\Images\28ec816b-016c-4c49-8353-47484c91c714.jpeg" />
+    <Content Remove="wwwroot\Images\59f43f22-91cb-40d5-989c-3726318dfb63.jpg" />
+    <Content Remove="wwwroot\Images\9a2d060f-f581-44f9-8f54-c63ab9411967.jpg" />
+    <Content Remove="wwwroot\Images\a4ea2ea3-e235-41b9-81ef-a4c4ee7fb5ac.jpg" />
+    <Content Remove="wwwroot\Images\a5cb9eb9-6459-455d-b02c-9d609d0eacc6.jpg" />
+    <Content Remove="wwwroot\Images\b2ee5405-e3bd-4a81-b719-94bb66849498.jpg" />
+    <Content Remove="wwwroot\Images\ca945d93-f252-4b90-b29d-8c79a2325447.jpg" />
+    <Content Remove="wwwroot\Images\df56efbb-f69c-4771-ae16-bc425bc6c49a.jpeg" />
+    <Content Remove="wwwroot\Images\e2de5046-38b4-4baf-bc70-33cc066e9396.jpg" />
+    <Content Remove="wwwroot\pdf\Paper1" />
+    <Content Remove="wwwroot\pdf\SelectedQuestions (3).pdf" />
+    <Content Remove="wwwroot\pdf\SelectedQuestions.pdf" />
+    <Content Remove="wwwroot\pdf\Srushti" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\19bbcb30-ad8b-4d75-a1f5-3aa8bd3010be.jpeg" />
+    <None Include="wwwroot\Images\1a48104f-cce4-4662-a2f8-9cadb38612d7.jpg" />
+    <None Include="wwwroot\Images\1cbba20f-27d0-4448-a855-61f8edc55b93.jpeg" />
+    <None Include="wwwroot\Images\28ec816b-016c-4c49-8353-47484c91c714.jpeg" />
+    <None Include="wwwroot\Images\59f43f22-91cb-40d5-989c-3726318dfb63.jpg" />
+    <None Include="wwwroot\Images\9a2d060f-f581-44f9-8f54-c63ab9411967.jpg" />
+    <None Include="wwwroot\Images\a4ea2ea3-e235-41b9-81ef-a4c4ee7fb5ac.jpg" />
+    <None Include="wwwroot\Images\a5cb9eb9-6459-455d-b02c-9d609d0eacc6.jpg" />
+    <None Include="wwwroot\Images\b2ee5405-e3bd-4a81-b719-94bb66849498.jpg" />
+    <None Include="wwwroot\Images\ca945d93-f252-4b90-b29d-8c79a2325447.jpg" />
+    <None Include="wwwroot\Images\df56efbb-f69c-4771-ae16-bc425bc6c49a.jpeg" />
+    <None Include="wwwroot\Images\e2de5046-38b4-4baf-bc70-33cc066e9396.jpg" />
+    <None Include="wwwroot\pdf\Paper1" />
+    <None Include="wwwroot\pdf\SelectedQuestions (3).pdf" />
+    <None Include="wwwroot\pdf\SelectedQuestions.pdf" />
+    <None Include="wwwroot\pdf\Srushti" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.0.3" />
+    <PackageReference Include="Font.Awesome" Version="5.15.4" />
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
+    <PackageReference Include="Syncfusion.Blazor" Version="26.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TrainerBackendDll\TrainerBackendDll\TrainerBackendDll.csproj" />
+    <ProjectReference Include="C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TrainerBackendDll\TrainerBackendDll\TrainerBackendDll.csproj" />
+  </ItemGroup>
+
+</Project>

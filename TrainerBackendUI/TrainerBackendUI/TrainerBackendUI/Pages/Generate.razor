@@ -1,0 +1,49 @@
+﻿@page "/generatelink"
+@inject NavigationManager navigator;
+<br/>
+
+<div class="container">
+    <h1>Set Hyperlink Time</h1>
+    <br/>
+
+    <form>
+        <label for="startTime">Start Time  :</label>
+        <br/>
+        <input type="datetime-local" id="startTime" @bind="startTime" />
+        <br />
+        <br />
+        <label for="expiryTime">Expiry Time:</label>
+        <br/>
+        <input type="datetime-local" id="expiryTime" @bind="expiryTime" />
+        <br />
+        <br />
+        <button type="submit" class="btn btn btn-outline-success m-2 p-2" @onclick="UpdateHyperlinkTime">Generate</button>
+        <button type="submit" class="btn btn btn-outline-info m-2 p-2" @onclick="NavigatetoHome">Back to </button>
+    </form>
+    <br/>
+</div>
+
+@code {
+    private DateTime startTime;
+    private DateTime expiryTime;
+
+    private async Task UpdateHyperlinkTime()
+    {
+        // Call the API to update the hyperlink time
+        //await HttpClient.PostAsync("api/hyperlinks/update-time", new HyperlinkTimeUpdateModel { StartTime = startTime, ExpiryTime = expiryTime });
+    }
+    public class HyperlinkTimeUpdateModel
+    {
+        public DateTime StartTime { get; set; }
+        public DateTime ExpiryTime { get; set; }
+    }
+    private void NavigatetoHome(MouseEventArgs e)
+    {
+        navigator.NavigateTo("/");
+    }
+
+
+
+
+}
+

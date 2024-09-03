@@ -1,0 +1,6 @@
+@QuestionBankApi.Trainer_HostAddress = http://localhost:5012
+
+GET {{QuestionBankApi.Trainer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

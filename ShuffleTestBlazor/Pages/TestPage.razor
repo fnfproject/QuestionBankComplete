@@ -1,0 +1,38 @@
+﻿@page "/test"
+@using ShuffleTestBlazor.Services
+@using ShuffleTestBlazor.Dtos
+@inject ShuffleService ShuffleService
+
+<h3>Test Page</h3>
+
+@if (shuffledQuestions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var question in shuffledQuestions)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@question.QuestionText</h5>
+                <ul class="list-group list-group-flush">
+                    @foreach (var option in question.ShuffledOptions)
+                    {
+                        <li class="list-group-item">@option</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private List<ShuffledQuestionDto> shuffledQuestions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        shuffledQuestions = await ShuffleService.GetShuffledQuestionsAsync();
+    }
+}
+
