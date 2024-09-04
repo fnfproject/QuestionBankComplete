@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuestionBankDll.Trainer.Dtos;
 using QuestionBankDll.Trainer.Models;
 using System.Net.Http.Json;
 
@@ -14,11 +15,11 @@ namespace QuestionBankUI.Trainer.Services
         {
             _httpClient = httpClient;
         }
-        public async Task AddQuestionAsync(Question question)
+        public async Task AddQuestionAsync(QuestionDtos question)
         {
             try
             {
-                _httpClient.PostAsJsonAsync<Question>("AddSingleQuestion", question);
+                _httpClient.PostAsJsonAsync<QuestionDtos>("AddSingleQuestion", question);
 
             }
             catch (Exception ex)
@@ -27,6 +28,8 @@ namespace QuestionBankUI.Trainer.Services
             }
             //response.EnsureSuccessStatusCode();
         }
+
+        
 
         //public async Task AddQuestionInBulkAsync(IFormFile file)
         //{

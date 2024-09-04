@@ -8,7 +8,7 @@ namespace QuestionBankAPI.Trainer.Services
 {
     public interface IQuestionDataService
     {
-        Task AddQuestion(Question question);
+        Task AddQuestion(QuestionDtos question);
         //Task AddQuestionsInBulk(IFormFile file);
         string ProcessOption(ExcelRange cellstring, string path);
         Task DeleteQuestion(int questionId);
@@ -28,7 +28,7 @@ namespace QuestionBankAPI.Trainer.Services
         {
             _questionService = service;
         }
-        public Task AddQuestion(Question question)
+        public Task AddQuestion(QuestionDtos question)
         {
             return Task.Run(() => _questionService.AddQuestion(question));
         }
@@ -120,5 +120,6 @@ namespace QuestionBankAPI.Trainer.Services
             }
         }
 
+        
     }
 }

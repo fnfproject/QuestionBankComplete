@@ -29,12 +29,14 @@ namespace QuestionBankAPI.Trainer.Controllers
         private readonly string _imageUIFolder;
 
 
-        public TrainerController(IQuestionService questionDataService, IResultDataService resultDataService, IPracticePaperDataService practicePaperDataService)
+        public TrainerController(IQuestionService questionDataService, IResultDataService resultDataService, IPracticePaperDataService practicePaperDataService, ITestService testService)
         {
             _questionDataService = questionDataService;
             _resultDataService = resultDataService;
             _practicePaperDataService = practicePaperDataService;
-            _uploadPath = @"C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TrainerBackend\TrainerBackend\pdf\";
+            _testDataService = testService;
+
+            _uploadPath = @"C:\Users\6147960\Desktop\Git\QuestionBankComplete\TrainerBackend\TrainerBackend\pdf\";
             _imageFolder = @"C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TrainerBackend\TrainerBackend\Images\";
             _imageUIFolder = @"C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TrainerBackendUI\TrainerBackendUI\TrainerBackendUI\wwwroot\Images\";
         }
@@ -63,7 +65,7 @@ namespace QuestionBankAPI.Trainer.Controllers
 
 
         [HttpPost("AddSingleQuestion")] //single question of type text
-        public async Task<ActionResult> AddSingleQuestion(Question question)
+        public async Task<ActionResult> AddSingleQuestion(QuestionDtos question)
         {
             try
             {

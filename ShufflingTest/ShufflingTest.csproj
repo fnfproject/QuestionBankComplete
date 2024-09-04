@@ -29,8 +29,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QuestionBankApi.Trainee\QuestionBankApi.Trainee.csproj" />
-    <ProjectReference Include="..\TraineeBackendDll\TraineeBackendDll.csproj" />
-    <ProjectReference Include="C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TraineeBackendDll\TraineeBackendDll.csproj" />
+   
+    <ProjectReference Include="C:\Users\6147960\Desktop\Git\QuestionBankComplete\TraineeBackendDll\TraineeBackendDll.csproj" />
     
   </ItemGroup>
 

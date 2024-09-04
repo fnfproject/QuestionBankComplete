@@ -27,7 +27,8 @@ namespace QuestionBankDll.Trainer.Services
         public PracticePaperService(QuestionDbContext context)
         {
             _context = context;
-            _pdfFolderPath = "C:\\Users\\6147960\\source\\repos\\ConsoleApp2\\QuestionBank\\TrainerBackendUI\\TrainerBackendUI\\TrainerBackendUI\\pdf\\";
+            _pdfFolderPath = "C:\\Users\\6147960\\Desktop\\Git\\QuestionBankComplete\\TrainerBackend\\TrainerBackend\\pdf\\";
+//            _pdfFolderPath = "C:\\Users\\6147960\\source\\repos\\ConsoleApp2\\QuestionBank\\TrainerBackendUI\\TrainerBackendUI\\TrainerBackendUI\\pdf\\";
 
             if (!Directory.Exists(_pdfFolderPath))
             {

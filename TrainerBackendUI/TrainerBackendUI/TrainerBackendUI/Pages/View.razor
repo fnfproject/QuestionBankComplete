@@ -208,8 +208,10 @@
     {
         if (selectedQuestionIds != null && selectedQuestionIds.Any())
         {
-            var ids = string.Join(",", selectedQuestionIds);
-            navigator.NavigateTo($"/testAdd/selectedQuestionIds={ids}");
+            var queryString = string.Join(",", selectedQuestionIds);
+            navigator.NavigateTo($"/testAdd/{queryString}");
+            //var ids = string.Join(",", selectedQuestionIds);
+            //navigator.NavigateTo($"/testAdd/selectedQuestionIds={ids}");
         }
     }
 }

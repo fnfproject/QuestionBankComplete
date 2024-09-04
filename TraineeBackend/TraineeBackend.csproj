@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TraineeBackendDll\TraineeBackendDll.csproj" />
-    <ProjectReference Include="C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TraineeBackendDll\TraineeBackendDll.csproj" />
   </ItemGroup>
 
 </Project>

@@ -54,8 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\TrainerBackendDll\TrainerBackendDll\TrainerBackendDll.csproj" />
-    <ProjectReference Include="C:\Users\6147960\source\repos\ConsoleApp2\QuestionBank\TrainerBackendDll\TrainerBackendDll\TrainerBackendDll.csproj" />
+    
+    <ProjectReference Include="C:\Users\6147960\Desktop\Git\QuestionBankComplete\TrainerBackendDll\TrainerBackendDll\TrainerBackendDll.csproj" />
   </ItemGroup>
 
 </Project>

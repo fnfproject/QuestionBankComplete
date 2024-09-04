@@ -126,7 +126,7 @@
     private PracticePaper practicePaper = new PracticePaper();
     private string selectedOption = "";
     private string testName = "";
-    private string _pdfFolderPath = "C:\\Users\\6147954\\Documents\\QuestionBank.Trainer\\QuestionBankUI.Trainer\\QuestionBankUI.Trainer\\pdf\\";
+    private string _pdfFolderPath = "C:\\Users\\6147960\\Desktop\\Git\\QuestionBankComplete\\TrainerBackendUI\\TrainerBackendUI\\TrainerBackendUI\\pdf\\";
 
     private string fileName = "";
     private IBrowserFile selectedFile;
@@ -163,7 +163,7 @@
 
                 content.Add(streamContent, "file", file.Name);
 
-                Http.PostAsync("AddPracticePaper", content);
+                await Http.PostAsync("AddPracticePaper", content);
             }
 
         }
