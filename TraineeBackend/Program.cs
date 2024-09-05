@@ -15,6 +15,16 @@ namespace TraineeBackend
             // Add services to the container.
             builder.Services.AddControllers();
 
+            builder.Services.AddCors(setUp =>
+            {
+                setUp.AddPolicy("cors", setUp =>
+                {
+                    setUp.AllowAnyHeader();
+                    setUp.AllowAnyMethod();
+                    setUp.AllowAnyOrigin();
+                });
+            });
+
             builder.Services.AddDbContext<QuestionBankDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
                              sqlOptions => sqlOptions.MigrationsAssembly("TrainerBackendDll")));
@@ -34,6 +44,8 @@ namespace TraineeBackend
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("cors");
 
             app.UseAuthorization();
 

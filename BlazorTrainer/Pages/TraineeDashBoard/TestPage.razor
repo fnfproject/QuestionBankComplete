@@ -1,0 +1,149 @@
+﻿@page "/test/{testHyperlink}/{userId:int}"
+@using TraineeBackendDll.Dtos
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<div class="container">
+    <h2 class="text-center my-4">Test Questions</h2>
+
+    <div class="card mb-4" style="width: 100%;">
+        <div class="card-body">
+            @if (testDetails != null && !isSubmitted)
+            {
+                <h3>@testDetails.TestName</h3>
+                <EditForm Model="testSubmission" OnValidSubmit="SubmitTest">
+                    @foreach (var question in testDetails.ModelTestQuestions)
+                    {
+                        <div class="mb-4">
+                            <h5>@question.QuestionText</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="optionA_@question.QuestionId" name="question_@question.QuestionId" value="A" @onchange="@(args => SelectAnswer(question.QuestionId, "A"))" />
+                                <label class="form-check-label" for="optionA_@question.QuestionId">@question.OptionA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="optionB_@question.QuestionId" name="question_@question.QuestionId" value="B" @onchange="@(args => SelectAnswer(question.QuestionId, "B"))" />
+                                <label class="form-check-label" for="optionB_@question.QuestionId">@question.OptionB</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="optionC_@question.QuestionId" name="question_@question.QuestionId" value="C" @onchange="@(args => SelectAnswer(question.QuestionId, "C"))" />
+                                <label class="form-check-label" for="optionC_@question.QuestionId">@question.OptionC</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="optionD_@question.QuestionId" name="question_@question.QuestionId" value="D" @onchange="@(args => SelectAnswer(question.QuestionId, "D"))" />
+                                <label class="form-check-label" for="optionD_@question.QuestionId">@question.OptionD</label>
+                            </div>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-success">Submit Test</button>
+                </EditForm>
+            }
+
+            else if (isSubmitted)
+            {
+                <h3>Test Result</h3>
+                <p>Score: @resultDetails.Score</p>
+                <p>Correct Answers: @resultDetails.NoOfRightAnswers</p>
+                <p>Wrong Answers: @resultDetails.NoOfWrongAnswers</p>
+                <h4>Answer Review:</h4>
+                @foreach (var question in testDetails.ModelTestQuestions)
+                {
+                    <div>
+                        <h5>@question.QuestionText</h5>
+                        <p><strong>Your Answer:</strong> @selectedAnswers[question.QuestionId]</p>
+                        <p><strong>Correct Answer:</strong> @question.CorrectAnswer</p>
+                        <p><strong>Explanation:</strong> @question.Explaination</p>
+                    </div>
+                }
+                <button class="btn btn-primary" @onclick="GoBackToDashboard">Go to Dashboard</button>
+            }
+
+            else
+            {
+                <p>Loading test...</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string testHyperlink { get; set; }
+    [Parameter] 
+    public int userId { get; set; }
+
+    private TestDetailsDto testDetails;
+    private TestSubmissionDto testSubmission = new TestSubmissionDto();
+    private Dictionary<int, string> selectedAnswers = new Dictionary<int, string>();
+    private bool isSubmitted = false;
+    private ResultDto resultDetails;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTestData();
+    }
+
+    private async Task LoadTestData()
+    {
+        try
+        {
+            testDetails = await Http.GetFromJsonAsync<TestDetailsDto>($"http://localhost:5012/api/Trainer/test/{testHyperlink}");
+
+            if (testDetails == null || testDetails.ModelTestQuestions == null)
+            {
+                Console.WriteLine("Error: Test details or questions are null.");
+                return;
+            }
+
+            // Set TestId in testSubmission
+            testSubmission.TestId = testDetails.TestId; // Assign TestId from the loaded test details
+
+            // Assume the UserId is available, e.g., from user session or passed as a parameter
+            testSubmission.UserId = userId; // Replace this with actual logic to get the logged-in user's ID
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading test: {ex.Message}");
+        }
+    }
+
+    private void SelectAnswer(int questionId, string option)
+    {
+        if (selectedAnswers.ContainsKey(questionId))
+        {
+            selectedAnswers[questionId] = option;
+        }
+        else
+        {
+            selectedAnswers.Add(questionId, option);
+        }
+    }
+
+    private async Task SubmitTest()
+    {
+        // Map selectedAnswers dictionary to the list of QuestionSubmissionDto
+        testSubmission.SelectedAnswers = selectedAnswers.Select(sa => new QuestionSubmissionDto
+            {
+                QuestionId = sa.Key,
+                SelectedAnswer = sa.Value
+            }).ToList();
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("http://localhost:5136/api/Question/SubmitTest", testSubmission);
+            if (response.IsSuccessStatusCode)
+            {
+                resultDetails = await response.Content.ReadFromJsonAsync<ResultDto>();
+                isSubmitted = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error submitting test: {ex.Message}");
+        }
+    }
+
+    private void GoBackToDashboard()
+    {
+        Navigation.NavigateTo("/TraineeDashboard/{userId:int}");
+    }
+}

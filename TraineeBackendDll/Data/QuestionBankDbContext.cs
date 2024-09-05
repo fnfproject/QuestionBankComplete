@@ -23,7 +23,7 @@ namespace TraineeBackendDll.Data
 
         public DbSet<UserTbl> Users { get; set; }
 
-        public DbSet<TestQuestion> TestQuestions { get; set; }
+        
 
        // public DbSet<TestAnswer> testAnswers { get; set; }
 

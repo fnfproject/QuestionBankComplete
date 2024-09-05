@@ -11,23 +11,26 @@ namespace TraineeBackendDll.Models
     public class Result
     {
         [Key]
-        public int ResultId { get; set; }
+        public int ResultId { get; set; }  // Primary key
 
-        [ForeignKey("TestId")]
-        public int TestId { get; set; }
+        [Required]
+        public int TestId { get; set; }  // Foreign key for the Test
 
-        [ForeignKey("Id")]
-        public int UserId { get; set; }
-        public int Score { get; set; }
-        public int NoRightAnswers { get; set; }
-        public int NoOfWrongAnswers { get; set; }
-        public double Percentage { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
+        [Required]
+        public int UserId { get; set; }  // Foreign key for the Trainee who took the test
 
-        // Method to get CreatedAt in the desired format
-        public string GetFormattedCreatedAt()
-        {
-            return CreatedAt.ToString("M/d/yyyy h:mm:ss tt");
-        }
+        [Required]
+        public int NoOfRightAnswers { get; set; }  // Number of correct answers
+
+        [Required]
+        public int NoOfWrongAnswers { get; set; }  // Number of incorrect answers
+
+        [Required]
+        public decimal Score { get; set; }  // Score based on correct answers
+
+        [Required]
+        public decimal Percentage { get; set; }  // Percentage score
+
+       
     }
 }
