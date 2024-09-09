@@ -114,6 +114,56 @@ namespace TraineeBackend.Controllers
             return Ok(resultDto);
         }
 
+        [HttpGet("GetLeaderboard")]
+        public async Task<IActionResult> GetLeaderboard()
+        {
+            try
+            {
+                var leaderboard = await _context.Results
+                    .GroupBy(r => r.UserId)
+                    .Select(g => new
+                    {
+                        UserId = g.Key,
+                        TotalScore = g.Sum(r => r.Score),
+                        Name = _context.Users.Where(u => u.Id == g.Key).Select(u => u.Username).FirstOrDefault()
+                    })
+                    .OrderByDescending(r => r.TotalScore)
+                    .ToListAsync();
+
+                return Ok(leaderboard);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetTestProgress/{Id}")]
+        public async Task<IActionResult> GetTestProgress(int id)
+        {
+            try
+            {
+                var testProgress = await _context.Results
+                    .Where(r => r.UserId == id)
+                    .Select(r => new
+                    {
+                        r.TestId,
+                        TestName = _context.Tests.Where(t => t.TestId == r.TestId).Select(t => t.TestName).FirstOrDefault(),
+                        r.Score,
+                        TestDate = _context.Tests.Where(t => t.TestId == r.TestId).Select(t => t.StartTime).FirstOrDefault() // Assuming TestDate exists
+                    })
+                    .OrderBy(r => r.TestDate) // Order by the test date
+                    .ToListAsync();
+
+                return Ok(testProgress);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
 
     }
 }

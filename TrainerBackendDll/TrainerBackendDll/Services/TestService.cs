@@ -61,8 +61,8 @@ namespace TrainerBackendDll.Services
                 TestMaxMarks = request.QuestionIds.Count,
                 TestNoOfQuestions = request.QuestionIds.Count,
                 CreatedBy = 1,
-                StartTime = DateTime.UtcNow,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(30),
+                StartTime = request.StartTime,
+                ExpiryTime = request.ExpiryTime,
                 CreatedAt = DateTime.UtcNow,
                 Hyperlinks = Guid.NewGuid().ToString()
             };

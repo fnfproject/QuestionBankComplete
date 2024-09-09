@@ -350,7 +350,7 @@ namespace QuestionBankAPI.Trainer.Controllers
         [HttpPost("test/GenerateTest")]
         public async Task<IActionResult> GenerateTest(GenerateTestRequest request)
         {
-            Console.WriteLine("This is in Controller");
+           // Console.WriteLine("This is in Controller");
 
             try
             {
@@ -359,7 +359,7 @@ namespace QuestionBankAPI.Trainer.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("This is in Controller");
+               // Console.WriteLine("This is in Controller");
 
                 return BadRequest(ex.Message);
                 //Console.WriteLine(ex.StackTrace);

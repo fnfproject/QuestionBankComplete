@@ -17,19 +17,19 @@
                         <div class="mb-4">
                             <h5>@question.QuestionText</h5>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="optionA_@question.QuestionId" name="question_@question.QuestionId" value="A" @onchange="@(args => SelectAnswer(question.QuestionId, "A"))" />
+                                <input class="form-check-input" type="radio" id="optionA_@question.QuestionId" name="question_@question.QuestionId" value="@question.OptionA" @onchange="@(args => SelectAnswer(question.QuestionId, question.OptionA))" />
                                 <label class="form-check-label" for="optionA_@question.QuestionId">@question.OptionA</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="optionB_@question.QuestionId" name="question_@question.QuestionId" value="B" @onchange="@(args => SelectAnswer(question.QuestionId, "B"))" />
+                                <input class="form-check-input" type="radio" id="optionB_@question.QuestionId" name="question_@question.QuestionId" value="@question.OptionB" @onchange="@(args => SelectAnswer(question.QuestionId, question.OptionB))" />
                                 <label class="form-check-label" for="optionB_@question.QuestionId">@question.OptionB</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="optionC_@question.QuestionId" name="question_@question.QuestionId" value="C" @onchange="@(args => SelectAnswer(question.QuestionId, "C"))" />
+                                <input class="form-check-input" type="radio" id="optionC_@question.QuestionId" name="question_@question.QuestionId" value="@question.OptionC" @onchange="@(args => SelectAnswer(question.QuestionId, question.OptionC))" />
                                 <label class="form-check-label" for="optionC_@question.QuestionId">@question.OptionC</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" id="optionD_@question.QuestionId" name="question_@question.QuestionId" value="D" @onchange="@(args => SelectAnswer(question.QuestionId, "D"))" />
+                                <input class="form-check-input" type="radio" id="optionD_@question.QuestionId" name="question_@question.QuestionId" value="@question.OptionD" @onchange="@(args => SelectAnswer(question.QuestionId, question.OptionD))" />
                                 <label class="form-check-label" for="optionD_@question.QuestionId">@question.OptionD</label>
                             </div>
                         </div>

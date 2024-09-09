@@ -16,8 +16,4 @@
     <ProjectReference Include="..\TraineeBackendDll\TraineeBackendDll.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

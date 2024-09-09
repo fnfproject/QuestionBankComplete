@@ -18,6 +18,16 @@
         <div class="form-group">
             <label for="testName">Test Name:</label>
             <input type="text" id="testName" class="form-control" @bind="testName" />
+            <label class="col-sm-2 col-form-label">Start Time :</label>
+            <div class="col-sm-10">
+                <input type="datetime-local" @bind=startTime class="form-control" />
+                <br />
+            </div>
+            <label class="col-sm-2 col-form-label">Expiry Time :</label>
+            <div class="col-sm-10">
+                <input type="datetime-local" @bind=expiryTime class="form-control" />
+                <br />
+            </div>
         </div>
         <button type="button" @onclick="GenerateTestAsync" class="btn btn-primary">Generate Test</button>
     </div>
@@ -32,6 +42,8 @@ else
 @code {
     private string testName;
     private string hyperLink = "";
+    private DateTime startTime;
+    private DateTime expiryTime;
     private List<int> selectedQuestionIdsList = new List<int>();
 
     [Parameter]
@@ -80,7 +92,9 @@ else
             {
                 TestName = testName,
                 QuestionIds = selectedQuestionIdsList,
-                Hyperlinks = hyperLink
+                Hyperlinks = hyperLink,
+                StartTime = startTime,
+                ExpiryTime = expiryTime
 
             };
 

@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\TraineeDashboard\Practicepaper1.razor" />
-    <Content Remove="Pages\TraineeDashboard\TestPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.8" />
@@ -20,24 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\QuestionBankApi.Trainee\QuestionBankApi.Trainee.csproj" />
     <ProjectReference Include="..\TraineeBackendDll\TraineeBackendDll.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\TraineeDashboard\TestPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\TraineeDashboard\Practicepaper1.razor" />
-    <_ContentIncludedByDefault Remove="Pages\TraineeDashboard\TestPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\TraineeDashboard\Practicepaper1.razor" />
-    <None Include="Pages\TraineeDashboard\TestPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\TraineeDashboard\Practicepaper1.razor" />
   </ItemGroup>
 
 </Project>
