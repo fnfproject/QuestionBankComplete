@@ -44,6 +44,7 @@
                 <p>Score: @resultDetails.Score</p>
                 <p>Correct Answers: @resultDetails.NoOfRightAnswers</p>
                 <p>Wrong Answers: @resultDetails.NoOfWrongAnswers</p>
+
                 <h4>Answer Review:</h4>
                 @foreach (var question in testDetails.ModelTestQuestions)
                 {
@@ -54,6 +55,7 @@
                         <p><strong>Explanation:</strong> @question.Explaination</p>
                     </div>
                 }
+
                 <button class="btn btn-primary" @onclick="GoBackToDashboard">Go to Dashboard</button>
             }
 
@@ -86,6 +88,7 @@
     {
         try
         {
+            // Fetch the test details
             testDetails = await Http.GetFromJsonAsync<TestDetailsDto>($"http://localhost:5012/api/Trainer/test/{testHyperlink}");
 
             if (testDetails == null || testDetails.ModelTestQuestions == null)
@@ -94,16 +97,36 @@
                 return;
             }
 
+            // Shuffle the questions
+            testDetails.ModelTestQuestions = ShuffleList(testDetails.ModelTestQuestions);
+
+            // Shuffle the options for each question
+            foreach (var question in testDetails.ModelTestQuestions)
+            {
+                var shuffledOptions = ShuffleList(new List<string> { question.OptionA, question.OptionB, question.OptionC, question.OptionD });
+
+                question.OptionA = shuffledOptions[0];
+                question.OptionB = shuffledOptions[1];
+                question.OptionC = shuffledOptions[2];
+                question.OptionD = shuffledOptions[3];
+            }
+
             // Set TestId in testSubmission
-            testSubmission.TestId = testDetails.TestId; // Assign TestId from the loaded test details
+            testSubmission.TestId = testDetails.TestId;
 
             // Assume the UserId is available, e.g., from user session or passed as a parameter
-            testSubmission.UserId = userId; // Replace this with actual logic to get the logged-in user's ID
+            testSubmission.UserId = userId;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading test: {ex.Message}");
         }
+    }
+
+    private static List<T> ShuffleList<T>(List<T> list)
+    {
+        Random rng = new Random();
+        return list.OrderBy(_ => rng.Next()).ToList();
     }
 
     private void SelectAnswer(int questionId, string option)
@@ -132,8 +155,20 @@
             var response = await Http.PostAsJsonAsync("http://localhost:5136/api/Question/SubmitTest", testSubmission);
             if (response.IsSuccessStatusCode)
             {
+                // Store the result data including correct answers and explanations
                 resultDetails = await response.Content.ReadFromJsonAsync<ResultDto>();
                 isSubmitted = true;
+
+                // Map the correct answers and explanations to the questions
+                foreach (var questionResult in resultDetails.QuestionResults)
+                {
+                    var question = testDetails.ModelTestQuestions.FirstOrDefault(q => q.QuestionId == questionResult.QuestionId);
+                    if (question != null)
+                    {
+                        question.CorrectAnswer = questionResult.CorrectAnswer;
+                        question.Explaination = questionResult.Explanation;
+                    }
+                }
             }
         }
         catch (Exception ex)
@@ -142,9 +177,10 @@
         }
     }
 
+
     private void GoBackToDashboard()
     {
-        Navigation.NavigateTo("/TraineeDashboard/{userId:int}");
+        Navigation.NavigateTo($"/TraineeDashboard/{userId}");
     }
 }
 

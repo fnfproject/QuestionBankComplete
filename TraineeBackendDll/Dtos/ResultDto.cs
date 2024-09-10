@@ -9,6 +9,10 @@ namespace TraineeBackendDll.Dtos
     public class ResultDto
     {
         public int TestId { get; set; }          // ID of the test
+
+        public string TestName { get; set; }
+
+        public DateTime CreatedAt { get; set; }
         public int UserId { get; set; }          // ID of the trainee
         public int NoOfRightAnswers { get; set; }  // Number of correct answers
         public int NoOfWrongAnswers { get; set; }  // Number of wrong answers

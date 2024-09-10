@@ -3,35 +3,146 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-<h3>Trainee Dashboard</h3>
+<h3 class="text-center mb-5">Trainee Dashboard</h3>
 
-<!-- Live Tests -->
-<div class="card mb-4">
-    <div class="card-header">
-        <h4>Available Tests</h4>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main content: Tests and Results -->
+        <div class="col-lg-8">
+            <!-- Live Tests Section -->
+            <h4 class="section-title">Live Tests</h4>
+            <div class="row">
+                @if (liveTests != null && liveTests.Any())
+                {
+                    @foreach (var test in liveTests)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">@test.TestName</h5>
+                                    <p class="card-text">Max Marks: @test.TestMaxMarks | No. of Questions: @test.TestNoOfQuestions</p>
+                                    <p class="card-text">
+                                        Start Time: @test.StartTime.ToString("dd/MM/yyyy HH:mm")<br />
+                                        Expiry Time: @test.ExpiryTime.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                    @if (IsTestStarted(test.StartTime))
+                                    {
+                                        <button class="btn btn-success" @onclick="() => NavigateToTest(test.HyperLinks)">Start Test</button>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-warning">Test starts in @((test.StartTime - DateTime.Now).Hours) hours and @((test.StartTime - DateTime.Now).Minutes) minutes.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No live tests at the moment.</p>
+                }
+            </div>
+
+            <!-- Expired Tests Section -->
+            <h4 class="section-title">Expired Tests</h4>
+            <div class="row">
+                @if (expiredTests != null && expiredTests.Any())
+                {
+                    @foreach (var test in expiredTests)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">@test.TestName</h5>
+                                    <p class="card-text">Max Marks: @test.TestMaxMarks | No. of Questions: @test.TestNoOfQuestions</p>
+                                    <p class="card-text">
+                                        Start Time: @test.StartTime.ToString("dd/MM/yyyy HH:mm")<br />
+                                        Expiry Time: @test.ExpiryTime.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                    <button class="btn btn-secondary" disabled>Test Expired</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No expired tests available.</p>
+                }
+            </div>
+
+            <!-- Previous Results Section -->
+            <h4 class="section-title">Previous Test Results</h4>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Date of Completion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (previousResults != null && previousResults.Any())
+                        {
+                            @foreach (var result in previousResults)
+                            {
+                                <tr class="table-row">
+                                    <td>@result.TestName</td>
+                                    <td>@result.Score</td>
+                                    <td>@result.Percentage %</td>
+                                    <td>@result.CreatedAt.ToShortDateString()</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No test results available.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sidebar: Trainee Progress -->
+        <div class="col-lg-4">
+            <div class="card mb-4 shadow-lg">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0">Trainee Progress</h4>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div class="progress-circle" style="--progress:@progress;">
+                        <div class="progress-circle-inner">
+                            <span>@progress%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Papers -->
+            <div class="card mb-4 shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Practice Papers</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">No practice papers available</li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <ul class="list-group list-group-flush">
-        @if (availableTests != null && availableTests.Any())
-        {
-            @foreach (var test in availableTests)
-            {
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>@test.TestName</span>
-                    <button class="btn btn-primary" @onclick="@(() => NavigateToTest(test.HyperLinks))">Start Test</button>
-                </li>
-            }
-        }
-        else
-        {
-            <li class="list-group-item">No active tests available</li>
-        }
-    </ul>
 </div>
 
 @code {
     [Parameter] public int Id { get; set; }
 
-    private List<TestDto> availableTests = new List<TestDto>();
+    private List<TestDto> liveTests = new List<TestDto>();
+    private List<TestDto> expiredTests = new List<TestDto>();
+    private List<ResultDto> previousResults = new List<ResultDto>();
+    private int progress = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,8 +153,14 @@
     {
         try
         {
-            // Call API to get available tests for trainee
-            availableTests = await Http.GetFromJsonAsync<List<TestDto>>("http://localhost:5136/api/Question/GetAllTestsForTrainees");
+            liveTests = await Http.GetFromJsonAsync<List<TestDto>>("http://localhost:5136/api/Question/LiveTests");
+            expiredTests = await Http.GetFromJsonAsync<List<TestDto>>("http://localhost:5136/api/Question/ExpiredTests");
+            previousResults = await Http.GetFromJsonAsync<List<ResultDto>>($"http://localhost:5136/api/Question/GetPreviousResults/{Id}");
+
+            if (previousResults.Any())
+            {
+                progress = (int)previousResults.Average(r => r.Percentage);
+            }
         }
         catch (Exception ex)
         {
@@ -51,8 +168,69 @@
         }
     }
 
+    private bool IsTestStarted(DateTime startTime)
+    {
+        return startTime <= DateTime.Now;
+    }
+
     private void NavigateToTest(string testHyperlink)
     {
         Navigation.NavigateTo($"/test/{testHyperlink}/{Id}");
     }
 }
+
+<style>
+    .section-title {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 5px;
+    }
+
+    .table-row:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .fade-in {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .progress-circle {
+        --progress-color: #28a745;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: conic-gradient(var(--progress-color) calc(var(--progress) * 1%), #e9ecef 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-circle-inner {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--progress-color);
+    }
+</style>

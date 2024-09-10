@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TraineeBackendDll.Data;
 using TraineeBackendDll.Dtos;
+using TraineeBackendDll.Interface;
 using TraineeBackendDll.Models;
 
 
@@ -17,10 +18,12 @@ namespace TraineeBackend.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly QuestionBankDbContext _context;
+        private readonly ITestService _testService;
 
-        public QuestionController(QuestionBankDbContext context)
+        public QuestionController(QuestionBankDbContext context,ITestService testService)
         {
             _context = context;
+            _testService = testService;
         }
 
 
@@ -163,7 +166,56 @@ namespace TraineeBackend.Controllers
             }
         }
 
+        [HttpGet("LiveTests")]
+        public async Task<IActionResult> GetLiveTests()
+        {
+            var liveTests = await _context.Tests
+                .Where(t => t.StartTime > DateTime.Now && t.StartTime <= DateTime.Now.AddDays(1))
+                .ToListAsync();
 
+            return Ok(liveTests);
+        }
+
+        [HttpGet("ExpiredTests")]
+        public async Task<IActionResult> GetExpiredTests()
+        {
+            var expiredTests = await _context.Tests
+                .Where(t => t.ExpiryTime < DateTime.Now)
+                .ToListAsync();
+
+            return Ok(expiredTests);
+        }
+
+        [HttpGet("GetPreviousResults/{traineeId}")]
+        public async Task<IActionResult> GetPreviousResults(int traineeId)
+        {
+            try
+            {
+                var previousResults = await _context.Results
+                    .Where(r => r.UserId == traineeId)
+                    .Select(r => new
+                    {
+                        r.TestId,
+                        TestName = _context.Tests.Where(t => t.TestId == r.TestId).Select(t => t.TestName).FirstOrDefault(),
+                        r.Score,
+                        r.Percentage,
+                        CreatedAt = _context.Tests.Where(t => t.TestId == r.TestId).Select(t => t.ExpiryTime).FirstOrDefault() // Assuming EndTime exists
+                    })
+                    .OrderByDescending(r => r.CreatedAt)
+                    .ToListAsync();
+
+                if (!previousResults.Any())
+                {
+                    return NotFound("No previous results found.");
+                }
+
+                return Ok(previousResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
     }
 }

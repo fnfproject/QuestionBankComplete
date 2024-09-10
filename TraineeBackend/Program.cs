@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using TraineeBackendDll.Data;
 using System.Collections.Generic;
 using TraineeBackendDll.Dtos;
+using TraineeBackendDll.Interface;
+using TraineeBackendDll.Service;
 
 namespace TraineeBackend
 {
@@ -31,6 +33,7 @@ namespace TraineeBackend
 
             // Add the dictionary as a singleton service
             builder.Services.AddSingleton<IDictionary<int, QuestionDto>>(provider => new Dictionary<int, QuestionDto>());
+            builder.Services.AddScoped<ITestService,TestService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

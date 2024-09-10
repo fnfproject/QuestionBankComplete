@@ -20,12 +20,12 @@
             <input type="text" id="testName" class="form-control" @bind="testName" />
             <label class="col-sm-2 col-form-label">Start Time :</label>
             <div class="col-sm-10">
-                <input type="datetime-local" @bind=startTime class="form-control" />
+                <input type="datetime-local" @bind=startTime class="form-control" min="1753-01-01T00:00" max="9999-12-31T23:59" />
                 <br />
             </div>
             <label class="col-sm-2 col-form-label">Expiry Time :</label>
             <div class="col-sm-10">
-                <input type="datetime-local" @bind=expiryTime class="form-control" />
+                <input type="datetime-local" @bind=expiryTime class="form-control" min="1753-01-01T00:00" max="9999-12-31T23:59" /> 
                 <br />
             </div>
         </div>

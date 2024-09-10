@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TraineeBackendDll.Models;
 
 namespace TraineeBackendDll.Dtos
 {
@@ -18,5 +19,7 @@ namespace TraineeBackendDll.Dtos
         public DateTime? CreatedAt { get; set; }
         public string HyperLinks { get; set; }
         public List<QuestionDto> ModelTestQuestions { get; set; } // Update this property
+
+        
     }
 }
