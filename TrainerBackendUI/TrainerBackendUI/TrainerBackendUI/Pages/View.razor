@@ -18,28 +18,32 @@
                     <h4>@subjectGroup.Key</h4>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="topicSelect">Select Topic:</label>
-                        <select id="topicSelect" class="form-control" @onchange="(e) => OnTopicSelected(subjectGroup.Key, e.Value.ToString())">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="topicSelect">Select Topic:</label>
+                        <div class="col-sm-10">
+                        <select id="topicSelect" class="form-control p-2" @onchange="(e) => OnTopicSelected(subjectGroup.Key, e.Value.ToString())">
                             <option value="">-- Select Topic --</option>
                             @foreach (var topic in subjectGroup.Select(q => q.Topic).Distinct())
                             {
                                 <option value="@topic">@topic</option>
                             }
                         </select>
+                        </div>
                     </div>
 
                     @if (selectedTopics.TryGetValue(subjectGroup.Key, out var selectedTopic) && selectedTopic != null)
                     {
-                        <div class="form-group mt-3">
-                            <label for="difficultySelect">Select Difficulty Level:</label>
-                            <select id="difficultySelect" class="form-control" @onchange="(e) => OnDifficultyLevelSelected(subjectGroup.Key, selectedTopic, e.Value.ToString())">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label" for="difficultySelect">Select Difficulty Level:</label>
+                            <div class="col-sm-10">
+                            <select id="difficultySelect" class="form-control p-2" @onchange="(e) => OnDifficultyLevelSelected(subjectGroup.Key, selectedTopic, e.Value.ToString())">
                                 <option value="">-- Select Difficulty Level --</option>
                                 @foreach (var difficulty in subjectGroup.Where(q => q.Topic == selectedTopic).Select(q => q.DifficultyLevel).Distinct())
                                 {
                                     <option value="@difficulty">@difficulty</option>
                                 }
                             </select>
+                            </div>
                         </div>
 
                         @if (selectedDifficultyLevels.TryGetValue(subjectGroup.Key, out var selectedDifficulty) && selectedDifficulty != null)

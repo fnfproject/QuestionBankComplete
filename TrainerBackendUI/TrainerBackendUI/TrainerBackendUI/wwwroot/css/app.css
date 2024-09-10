@@ -23,6 +23,14 @@ h3 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
+.list-group ul {
+    list-style-type: none;
+    padding left:0;
+}
+
+    .list-group ul li {
+        padding-left: 5px;
+    }
 
 .container-fluid {
     background-color: aliceblue;
