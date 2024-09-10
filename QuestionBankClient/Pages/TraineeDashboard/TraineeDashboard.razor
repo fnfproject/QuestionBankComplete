@@ -2,6 +2,7 @@
 @using TraineeBackendDll.Dtos
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 <h3 class="text-center mb-5">Trainee Dashboard</h3>
 
@@ -129,7 +130,22 @@
                     <h4 class="mb-0">Practice Papers</h4>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">No practice papers available</li>
+                    @if (PracticePapers != null && PracticePapers.Any())
+                    {
+                        @foreach (var practicePaper in PracticePapers)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @practicePaper
+                                <button class="btn btn-outline-primary btn-sm" @onclick="() => DownloadPdf(practicePaper)">
+                                    <i class="fa fa-download"></i> Download
+                                </button>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">No practice papers available</li>
+                    }
                 </ul>
             </div>
         </div>
@@ -142,6 +158,7 @@
     private List<TestDto> liveTests = new List<TestDto>();
     private List<TestDto> expiredTests = new List<TestDto>();
     private List<ResultDto> previousResults = new List<ResultDto>();
+    private List<string> PracticePapers = new List<string>();
     private int progress = 0;
 
     protected override async Task OnInitializedAsync()
@@ -156,6 +173,7 @@
             liveTests = await Http.GetFromJsonAsync<List<TestDto>>("http://localhost:5136/api/Question/LiveTests");
             expiredTests = await Http.GetFromJsonAsync<List<TestDto>>("http://localhost:5136/api/Question/ExpiredTests");
             previousResults = await Http.GetFromJsonAsync<List<ResultDto>>($"http://localhost:5136/api/Question/GetPreviousResults/{Id}");
+            PracticePapers = await Http.GetFromJsonAsync<List<string>>("http://localhost:5012/api/Trainer/GetPracticePapers");
 
             if (previousResults.Any())
             {
@@ -177,60 +195,27 @@
     {
         Navigation.NavigateTo($"/test/{testHyperlink}/{Id}");
     }
+
+    private async Task DownloadPdf(string pdfName)
+    {
+        try
+        {
+            var response = await Http.GetAsync($"http://localhost:5012/api/Trainer/DownloadPracticePaper/{pdfName}");
+            if (response.IsSuccessStatusCode)
+            {
+                var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                var fileName = response.Content.Headers.ContentDisposition?.FileName ?? pdfName;
+                await JsRuntime.InvokeVoidAsync("saveAsFile", fileName, "application/pdf", fileBytes);
+            }
+            else
+            {
+                Console.WriteLine("File not found");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error downloading file: {ex.Message}");
+        }
+    }
+
 }
-
-<style>
-    .section-title {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-size: 1.5rem;
-        font-weight: 600;
-        border-bottom: 2px solid #ddd;
-        padding-bottom: 5px;
-    }
-
-    .table-row:hover {
-        background-color: #f8f9fa;
-        cursor: pointer;
-    }
-
-    .fade-in {
-        animation: fadeIn 1s ease-in-out;
-    }
-
-    @@keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    .progress-circle {
-        --progress-color: #28a745;
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        background: conic-gradient(var(--progress-color) calc(var(--progress) * 1%), #e9ecef 0);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-circle-inner {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background-color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: var(--progress-color);
-    }
-</style>
