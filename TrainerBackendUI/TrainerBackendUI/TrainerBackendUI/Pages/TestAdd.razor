@@ -7,12 +7,36 @@
 @using System.Net.Http.Json
 @using TrainerBackendDll.Dtos
 
-<h3>Generate Test</h3>
-
-
-
 @if (selectedQuestionIdsList != null && selectedQuestionIdsList.Any())
 {
+    <div class="container">
+        <h1>Generate Test</h1><br />
+        <h5>Total Questions Selected: @selectedQuestionIdsList.Count</h5><br />
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Test Name :</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value=testName class="form-control" />
+                <br />
+            </div>
+
+
+            <label class="col-sm-2 col-form-label">Start Time :</label>
+            <div class="col-sm-10">
+                <input type="datetime-local" @bind=startTime class="form-control" min="1753-01-01T00:00" max="9999-12-31T23:59" />
+                <br />
+            </div>
+            <label class="col-sm-2 col-form-label">Expiry Time :</label>
+            <div class="col-sm-10">
+                <input type="datetime-local" @bind=expiryTime class="form-control" min="1753-01-01T00:00" max="9999-12-31T23:59" />
+                <br />
+            </div>
+
+
+        </div>
+        <button type="button" @onclick="GenerateTestAsync" class="btn btn-primary">Generate Test</button>
+    </div>
+@* <div class="container">
+        <h2>Generate Test</h2>
     <div class="mt-4">
         <h5>Total Questions Selected: @selectedQuestionIdsList.Count</h5>
         <div class="form-group">
@@ -31,6 +55,7 @@
         </div>
         <button type="button" @onclick="GenerateTestAsync" class="btn btn-primary">Generate Test</button>
     </div>
+    </div> *@
 }
 else
 {
@@ -38,6 +63,7 @@ else
         No questions selected.
     </div>
 }
+    
 
 @code {
     private string testName;

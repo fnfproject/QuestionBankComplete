@@ -336,7 +336,7 @@ namespace QuestionBankAPI.Trainer.Controllers
         {
             try
             {
-                  _questionDataService.UpdateQue(question);
+                await  _questionDataService.UpdateQue(question);
                 return Ok();
             }
             catch (Exception ex)

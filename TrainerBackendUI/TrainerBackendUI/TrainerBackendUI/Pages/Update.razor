@@ -3,12 +3,13 @@
 @inject QuestionBankUI.Trainer.Services.QuestionUIService service
 @inject NavigationManager navigate;
 @inject HttpClient Http
+@inject IJSRuntime JsRuntime
 <div class="container">
 
     <br />
     <div>
         <br />
-        <h4>Update Question</h4>
+        <h2>Update Question</h2>
         <br />
         @if (singleQuestion != null)
         {
@@ -28,9 +29,9 @@
 
                 <label class="col-sm-2 col-form-label">Difficulty Level: </label>
 
-                <div>
-              
-                    <select class="col-sm-10" @bind=singleQuestion.DifficultyLevel>
+                <div class="col-sm-10 ">
+
+                    <select class="form-control p-2" @bind=singleQuestion.DifficultyLevel>
                     <option value="Easy">Easy</option>
                     <option value="Mediun">Medium</option>
                     <option value="Hard">Hard</option>
@@ -107,10 +108,18 @@
 
         singleQuestion.QuestionId = id;
         singleQuestion.CreatedBy = 1;
+        if (!IsCorrectAnswerValid())
+        {
+            // Display an alert if the correct answer is not valid
+            await JsRuntime.InvokeVoidAsync("alert", "The correct answer doesn't match any of the four options provided.");
+            return;
+        }
+
+
         try{
             //await Http.PutAsJsonAsync($"Update/{id}", singleQuestion);
             await service.UpdateQuestionAsync(singleQuestion);
-
+            navigate.NavigateTo("/view");
         }
         catch(Exception ex)
         {
@@ -121,6 +130,14 @@
     private void Cancel()
     {
         navigate.NavigateTo("/");
+    }
+    private bool IsCorrectAnswerValid()
+    {
+        // Check if CorrectAnswer matches any of the options
+        return singleQuestion.CorrectAnswer == singleQuestion.OptionA ||
+               singleQuestion.CorrectAnswer == singleQuestion.OptionB ||
+               singleQuestion.CorrectAnswer == singleQuestion.OptionC ||
+               singleQuestion.CorrectAnswer == singleQuestion.OptionD;
     }
 
 }
